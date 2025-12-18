@@ -33,21 +33,21 @@ import java.util.Map;
 
 public class NetworkQuantumWorkbench extends SlimefunItem {
 
-    private static final int[] BACKGROUND_SLOTS = {
+	protected static final int[] BACKGROUND_SLOTS = {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18, 22, 24, 26, 27, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44
     };
-    private static final int[] RECIPE_SLOTS = {
+    protected static final int[] RECIPE_SLOTS = {
         10, 11, 12, 19, 20, 21, 28, 29, 30
     };
-    private static final int CRAFT_SLOT = 23;
-    private static final int OUTPUT_SLOT = 25;
+    protected static final int CRAFT_SLOT = 23;
+    protected static final int OUTPUT_SLOT = 25;
 
-    private static final CustomItemStack CRAFT_BUTTON_STACK = new CustomItemStack(
+    protected static final ItemStack CRAFT_BUTTON_STACK = CustomItemStack.create(
         Material.CRAFTING_TABLE,
         Theme.CLICK_INFO + "Click to entangle"
     );
 
-    private static final Map<ItemStack[], ItemStack> RECIPES = new HashMap<>();
+    protected static final Map<ItemStack[], ItemStack> RECIPES = new HashMap<>();
 
     public static final RecipeType TYPE = new RecipeType(
         Keys.newKey("quantum-workbench"),
@@ -163,7 +163,7 @@ public class NetworkQuantumWorkbench extends SlimefunItem {
         }
     }
 
-    private boolean testRecipe(ItemStack[] input, ItemStack[] recipe) {
+    protected boolean testRecipe(ItemStack[] input, ItemStack[] recipe) {
         for (int test = 0; test < recipe.length; test++) {
             if (!SlimefunUtils.isItemSimilar(input[test], recipe[test], true, false, false)) {
                 return false;

@@ -1,7 +1,7 @@
 package io.github.sefiraat.networks.network;
 
-import io.github.mooy1.infinityexpansion.items.storage.StorageUnit;
 import io.github.sefiraat.networks.Networks;
+import io.github.sefiraat.networks.network.barrel.BarrelType;
 import io.github.sefiraat.networks.network.barrel.InfinityBarrel;
 import io.github.sefiraat.networks.network.barrel.NetworkStorage;
 import io.github.sefiraat.networks.network.stackcaches.BarrelIdentity;
@@ -13,15 +13,23 @@ import io.github.sefiraat.networks.slimefun.network.NetworkPowerNode;
 import io.github.sefiraat.networks.slimefun.network.NetworkQuantumStorage;
 import io.github.sefiraat.networks.utils.StackUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.ncbpfluffybear.fluffymachines.items.Barrel;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import net.guizhanss.infinityexpansion2.implementation.items.storage.StorageCache;
+import net.guizhanss.infinityexpansion2.implementation.items.storage.StorageUnit;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import dev.cworldstar.networks.network.barrel.FluffyBarrel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,7 +131,7 @@ public class NetworkRoot extends NetworkNode {
             for (int x = 0; x <= 1; x++) {
                 for (int y = 0; y <= 1; y++) {
                     for (int z = 0; z <= 1; z++) {
-                        loc.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, loc.clone().add(x, y, z), 0);
+                        loc.getWorld().spawnParticle(Particle.EXPLOSION, loc.clone().add(x, y, z), 0);
                     }
                 }
             }
@@ -358,6 +366,17 @@ public class NetworkRoot extends NetworkNode {
                     barrelSet.add(storage);
                 }
             }
+            
+            // fluffy barrels
+            if(
+            		Networks.getSupportedPluginManager().isFluffyMachines() && 
+            		slimefunItem instanceof Barrel barrel) {
+            	final BlockMenu menu = BlockStorage.getInventory(testLocation);
+            	final FluffyBarrel fluffyBarrel = getFluffyBarrel(menu, testLocation.getBlock(), barrel);
+            	if(fluffyBarrel != null) {
+            		barrelSet.add(fluffyBarrel);
+            	}
+            }
 
         }
 
@@ -365,6 +384,17 @@ public class NetworkRoot extends NetworkNode {
         return barrelSet;
     }
 
+    @Nullable
+    private FluffyBarrel getFluffyBarrel(@NotNull BlockMenu menu, @NotNull Block b, @NotNull Barrel barrel) {
+    	return new FluffyBarrel(
+    		menu.getLocation(), 
+    		barrel.getStoredItem(b),
+    		barrel.getStored(b), 
+    		BarrelType.FLUFFY, 
+    		barrel
+    	);
+    };
+    
     @Nullable
     private InfinityBarrel getInfinityBarrel(@Nonnull BlockMenu blockMenu, @Nonnull StorageUnit storageUnit) {
         final ItemStack itemStack = blockMenu.getItemInSlot(16);
@@ -381,7 +411,7 @@ public class NetworkRoot extends NetworkNode {
             return null;
         }
 
-        final io.github.mooy1.infinityexpansion.items.storage.StorageCache cache = storageUnit.getCache(blockMenu.getLocation());
+        final StorageCache cache = storageUnit.getCaches().get(blockMenu.getLocation().toBlock());
 
         if (cache == null) {
             return null;

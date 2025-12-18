@@ -1,8 +1,8 @@
 package io.github.sefiraat.networks.slimefun.tools;
 
-import de.jeff_media.morepersistentdatatypes.DataType;
+import io.github.sefiraat.networks.network.stackcaches.QuantumCache;
 import io.github.sefiraat.networks.slimefun.network.NetworkDirectional;
-import io.github.sefiraat.networks.slimefun.network.NetworkPusher;
+import io.github.sefiraat.networks.slimefun.network.NetworkQuantumStorage;
 import io.github.sefiraat.networks.utils.Keys;
 import io.github.sefiraat.networks.utils.NetworkUtils;
 import io.github.sefiraat.networks.utils.StackUtils;
@@ -19,13 +19,13 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.Persis
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.jeff_media.morepersistentdatatypes.DataType;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -43,8 +43,24 @@ public class NetworkConfigurator extends SlimefunItem {
                     if (optional.isPresent()) {
                         final Block block = optional.get();
                         final SlimefunItem slimefunItem = BlockStorage.check(block);
+                        
+                        if(slimefunItem instanceof NetworkQuantumStorage storage) {
+                    		final BlockMenu blockMenu = BlockStorage.getInventory(block);
+                    		final QuantumCache cache = NetworkQuantumStorage.getCaches().get(blockMenu.getLocation());
+                        	if(player.isSneaking()) {
+                        		boolean voided = cache.isVoidExcess();
+                        		setConfigurator(storage, e.getItem(), player, voided);
+                        	} else {
+                        		cache.setVoidExcess(Optional.ofNullable(DataTypeMethods.getCustom(e.getItem().getItemMeta(), Keys.ITEM, DataType.BOOLEAN)).orElseGet(() -> {
+                        			player.sendMessage(Theme.ERROR + "The configurator does not have a void option saved. Defaulting to false!");
+                        			return false;
+                        		}));
+                        	}
+                        	return;
+                        }
+                        
                         if (Slimefun.getProtectionManager().hasPermission(player, block, Interaction.INTERACT_BLOCK)
-                            && slimefunItem instanceof NetworkDirectional directional
+                            && slimefunItem instanceof NetworkDirectional directional 
                         ) {
                             final BlockMenu blockMenu = BlockStorage.getInventory(block);
                             if (player.isSneaking()) {
@@ -62,7 +78,14 @@ public class NetworkConfigurator extends SlimefunItem {
         );
     }
 
-    private void setConfigurator(@Nonnull NetworkDirectional directional, @Nonnull ItemStack itemStack, @Nonnull BlockMenu blockMenu, @Nonnull Player player) {
+    private void setConfigurator(@Nonnull NetworkQuantumStorage storage, @Nonnull ItemStack item, Player who, boolean voided) {
+        final ItemMeta itemMeta = item.getItemMeta();
+        DataTypeMethods.setCustom(itemMeta, Keys.ITEM, DataType.BOOLEAN, voided);
+        item.setItemMeta(itemMeta);
+        who.sendMessage(Theme.SUCCESS + "Configuration copied.");
+	}
+
+	private void setConfigurator(@Nonnull NetworkDirectional directional, @Nonnull ItemStack itemStack, @Nonnull BlockMenu blockMenu, @Nonnull Player player) {
         final BlockFace blockFace = NetworkDirectional.getSelectedFace(blockMenu.getLocation());
 
         if (blockFace == null) {

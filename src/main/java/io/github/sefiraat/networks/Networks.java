@@ -10,8 +10,6 @@ import io.github.sefiraat.networks.slimefun.network.NetworkController;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.BlobBuildUpdater;
 
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.AdvancedPie;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,21 +21,10 @@ import java.util.Map;
 
 public class Networks extends JavaPlugin implements SlimefunAddon {
 
-
     private static Networks instance;
-
-    private final String username;
-    private final String repo;
-    private final String branch;
 
     private ListenerManager listenerManager;
     private SupportedPluginManager supportedPluginManager;
-
-    public Networks() {
-        this.username = "Sefiraat";
-        this.repo = "Networks";
-        this.branch = "master";
-    }
 
     @Override
     public void onEnable() {
@@ -48,7 +35,6 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
         getLogger().info("########################################");
 
         saveDefaultConfig();
-        tryUpdate();
 
         this.supportedPluginManager = new SupportedPluginManager();
 
@@ -57,13 +43,6 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
         this.listenerManager = new ListenerManager();
         this.getCommand("networks").setExecutor(new NetworksMain());
 
-        setupMetrics();
-    }
-
-    public void tryUpdate() {
-        if (getConfig().getBoolean("auto-update") && getDescription().getVersion().startsWith("Dev")) {
-            new BlobBuildUpdater(this, getFile(), "Networks", "Dev").start();
-        }
     }
 
     public void setupSlimefun() {
@@ -84,28 +63,10 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
         }
     }
 
-    public void setupMetrics() {
-        final Metrics metrics = new Metrics(this, 13644);
-
-        AdvancedPie networksChart = new AdvancedPie("networks", () -> {
-            Map<String, Integer> networksMap = new HashMap<>();
-            networksMap.put("Number of networks", NetworkController.getNetworks().size());
-            return networksMap;
-        });
-
-        metrics.addCustomChart(networksChart);
-    }
-
     @Nonnull
     @Override
     public JavaPlugin getJavaPlugin() {
         return this;
-    }
-
-    @Nullable
-    @Override
-    public String getBugTrackerURL() {
-        return MessageFormat.format("https://github.com/{0}/{1}/issues/", this.username, this.repo);
     }
 
     @Nonnull
@@ -124,4 +85,9 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
     public static ListenerManager getListenerManager() {
         return Networks.getInstance().listenerManager;
     }
+
+	@Override
+	public String getBugTrackerURL() {
+		return "https://github.com/Sniperkaos/Networks1.21.8";
+	}
 }

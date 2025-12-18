@@ -37,7 +37,7 @@ public class NetworkPusher extends NetworkDirectional {
     private static final int UP_SLOT = 14;
     private static final int DOWN_SLOT = 32;
 
-    public static final CustomItemStack TEMPLATE_BACKGROUND_STACK = new CustomItemStack(
+    public static final ItemStack TEMPLATE_BACKGROUND_STACK = CustomItemStack.create(
         Material.BLUE_STAINED_GLASS_PANE, Theme.PASSIVE + "Push items matching template"
     );
 
@@ -82,7 +82,7 @@ public class NetworkPusher extends NetworkDirectional {
             final ItemRequest itemRequest = new ItemRequest(clone, clone.getMaxStackSize());
 
             int[] slots = targetMenu.getPreset().getSlotsAccessedByItemTransport(targetMenu, ItemTransportFlow.INSERT, clone);
-
+            
             for (int slot : slots) {
                 final ItemStack itemStack = targetMenu.getItemInSlot(slot);
 
@@ -121,7 +121,7 @@ public class NetworkPusher extends NetworkDirectional {
 
     @Nullable
     @Override
-    protected CustomItemStack getOtherBackgroundStack() {
+    protected ItemStack getOtherBackgroundStack() {
         return TEMPLATE_BACKGROUND_STACK;
     }
 

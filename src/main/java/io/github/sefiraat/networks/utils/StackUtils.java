@@ -1,6 +1,7 @@
 package io.github.sefiraat.networks.utils;
 
 import io.github.sefiraat.networks.network.stackcaches.ItemStackCache;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import lombok.experimental.UtilityClass;
@@ -36,6 +37,13 @@ public class StackUtils {
     @Nonnull
     public static ItemStack getAsQuantity(@Nonnull ItemStack itemStack, int amount) {
         ItemStack clone = itemStack.clone();
+        clone.setAmount(amount);
+        return clone;
+    }
+    
+    @Nonnull
+    public static ItemStack getAsQuantity(@Nonnull SlimefunItemStack itemStack, int amount) {
+        ItemStack clone = itemStack.item().clone();
         clone.setAmount(amount);
         return clone;
     }

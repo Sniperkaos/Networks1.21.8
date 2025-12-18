@@ -1,10 +1,12 @@
 package io.github.sefiraat.networks.network.barrel;
 
-import io.github.mooy1.infinityexpansion.items.storage.StorageCache;
 import io.github.sefiraat.networks.network.stackcaches.BarrelIdentity;
 import io.github.sefiraat.networks.network.stackcaches.ItemRequest;
+import io.github.sefiraat.networks.slimefun.network.NetworkQuantumStorage;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import net.guizhanss.infinityexpansion2.implementation.items.storage.StorageCache;
+
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
@@ -32,7 +34,9 @@ public class InfinityBarrel extends BarrelIdentity {
 
     @Override
     public void depositItemStack(ItemStack[] itemsToDeposit) {
-        cache.depositAll(itemsToDeposit, true);
+        for(ItemStack item : itemsToDeposit) {
+        	cache.increaseAmount$InfinityExpansion2(item.getAmount());
+        }
     }
 
     @Override

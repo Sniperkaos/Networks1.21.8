@@ -12,6 +12,7 @@ softdepend:
   - Netheopoiesis
   - SlimeHUD
   - WildChests
+  - FluffyMachines
 commands:
   networks:
     description: /networks

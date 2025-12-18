@@ -1,6 +1,5 @@
 package io.github.sefiraat.networks.slimefun.tools;
 
-import de.jeff_media.morepersistentdatatypes.DataType;
 import io.github.sefiraat.networks.slimefun.network.grid.NetworkGrid;
 import io.github.sefiraat.networks.utils.Keys;
 import io.github.sefiraat.networks.utils.Theme;
@@ -21,6 +20,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.jeff_media.morepersistentdatatypes.DataType;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;

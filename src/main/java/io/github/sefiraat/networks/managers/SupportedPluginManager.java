@@ -21,7 +21,7 @@ public class SupportedPluginManager {
     public SupportedPluginManager() {
         Preconditions.checkArgument(instance == null, "Cannot instantiate class");
         instance = this;
-        this.infinityExpansion = Bukkit.getPluginManager().isPluginEnabled("InfinityExpansion");
+        this.infinityExpansion = Bukkit.getPluginManager().isPluginEnabled("InfinityExpansion2");
         this.netheopoiesis = Bukkit.getPluginManager().isPluginEnabled("Netheopoiesis");
         this.slimeHud = Bukkit.getPluginManager().isPluginEnabled("SlimeHUD");
         Networks.getInstance()
@@ -58,4 +58,8 @@ public class SupportedPluginManager {
     public static SupportedPluginManager getInstance() {
         return instance;
     }
+
+	public boolean isFluffyMachines() {
+		return Bukkit.getPluginManager().isPluginEnabled("FluffyMachines");
+	}
 }
