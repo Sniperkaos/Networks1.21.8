@@ -55,6 +55,7 @@ public class NetworkConfigurator extends SlimefunItem {
                         			player.sendMessage(Theme.ERROR + "The configurator does not have a void option saved. Defaulting to false!");
                         			return false;
                         		}));
+                    			player.sendMessage(Theme.SUCCESS + "Saved successfully!");
                         	}
                         	return;
                         }
